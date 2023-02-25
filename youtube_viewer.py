@@ -98,8 +98,10 @@ threads = 0
 views = 100
 
 fake = Faker()
-cwd = os.getcwd()
+cwd = os.path.dirname(os.path.abspath(__file__)) #os.getcwd()
+print("cwd "+cwd)
 patched_drivers = os.path.join(cwd, 'patched_drivers')
+print("patched_drivers "+patched_drivers)
 config_path = os.path.join(cwd, 'config.json')
 driver_identifier = os.path.join(cwd, 'patched_drivers', 'chromedriver')
 
@@ -212,14 +214,14 @@ def create_html(text_dict):
 def detect_file_change():
     global hash_urls, hash_queries, urls, queries
 
-    if hash_urls != get_hash("urls.txt"):
-        hash_urls = get_hash("urls.txt")
-        urls = load_url()
+    if hash_urls != get_hash(cwd+"/urls.txt"):
+        hash_urls = get_hash(cwd+"/urls.txt")
+        urls = load_url(cwd=cwd)
         suggested.clear()
 
-    if hash_queries != get_hash("search.txt"):
-        hash_queries = get_hash("search.txt")
-        queries = load_search()
+    if hash_queries != get_hash(cwd+"/search.txt"):
+        hash_queries = get_hash(cwd+"/search.txt")
+        queries = load_search(cwd=cwd)
         suggested.clear()
 
 
@@ -703,7 +705,7 @@ def main_viewer(proxy_type, proxy, position):
                 raise KeyboardInterrupt
 
             driver = get_driver(background, viewports, agent, auth_required,
-                                patched_driver, proxy, proxy_type, proxy_folder)
+                                patched_driver, proxy, proxy_type, proxy_folder,cwd)
 
             driver_dict[driver] = proxy_folder
 
@@ -804,7 +806,7 @@ def get_proxy_list():
             if proxy_api:
                 proxy_list = scrape_api(filename)
             else:
-                proxy_list = load_proxy(filename)
+                proxy_list = load_proxy(cwd+"/"+filename)
 
     else:
         proxy_list = gather_proxy()
@@ -1000,15 +1002,15 @@ if __name__ == '__main__':
     cpu_usage = str(psutil.cpu_percent(1))
     update_chrome_version()
     check_update()
-    osname, exe_name = download_driver(patched_drivers=patched_drivers)
+    osname, exe_name = download_driver(patched_drivers=patched_drivers,cwd=cwd)
     create_database(database=DATABASE, database_backup=DATABASE_BACKUP)
 
     if osname == 'win':
         import wmi
         constructor = wmi.WMI()
 
-    urls = load_url()
-    queries = load_search()
+    urls = load_url(cwd=cwd)
+    queries = load_search(cwd=cwd)
 
     if os.path.isfile(config_path):
         with open(config_path, 'r', encoding='utf-8-sig') as openfile:
@@ -1018,7 +1020,7 @@ if __name__ == '__main__':
             print(json.dumps(config, indent=4))
             print(bcolors.OKCYAN + 'Config file exists! Program will start automatically after 20 seconds...' + bcolors.ENDC)
             print(bcolors.FAIL + 'If you want to create a new config file PRESS CTRL+C within 20 seconds!' + bcolors.ENDC)
-            start = time() + 20
+            start = time() + 5
             try:
                 i = 0
                 while i < 96:
@@ -1035,8 +1037,8 @@ if __name__ == '__main__':
     else:
         create_config(config_path=config_path)
 
-    hash_urls = get_hash("urls.txt")
-    hash_queries = get_hash("search.txt")
+    hash_urls = get_hash(cwd+"/urls.txt")
+    hash_queries = get_hash(cwd+"/search.txt")
     hash_config = get_hash(config_path)
 
     while len(view) < views:

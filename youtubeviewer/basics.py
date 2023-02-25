@@ -93,7 +93,7 @@ chrome.webRequest.onAuthRequired.addListener(
         fh.write(background_js)
 
 
-def get_driver(background, viewports, agent, auth_required, path, proxy, proxy_type, proxy_folder):
+def get_driver(background, viewports, agent, auth_required, path, proxy, proxy_type, proxy_folder,cwd):
     options = webdriver.ChromeOptions()
     options.headless = background
     if viewports:
@@ -119,9 +119,9 @@ def get_driver(background, viewports, agent, auth_required, path, proxy, proxy_t
         'driver': 'OFF', 'server': 'OFF', 'browser': 'OFF'}
 
     if not background:
-        options.add_extension(WEBRTC)
-        options.add_extension(FINGERPRINT)
-        options.add_extension(ACTIVE)
+        options.add_extension(os.path.join(cwd,WEBRTC))
+        options.add_extension(os.path.join(cwd,FINGERPRINT))
+        options.add_extension(os.path.join(cwd,ACTIVE))
 
         if CUSTOM_EXTENSIONS:
             for extension in CUSTOM_EXTENSIONS:

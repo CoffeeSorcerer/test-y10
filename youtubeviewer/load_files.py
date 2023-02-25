@@ -23,14 +23,16 @@ SOFTWARE.
 """
 import hashlib
 from random import choices
-
+import sys
+import os
 from .colors import *
 
 
-def load_url():
+def load_url(cwd):
     print(bcolors.WARNING + 'Loading urls...' + bcolors.ENDC)
 
-    with open('urls.txt', encoding="utf-8") as fh:
+
+    with open(cwd+'/urls.txt', encoding="utf-8") as fh:
         links = [x.strip() for x in fh if x.strip() != '']
 
     print(bcolors.OKGREEN +
@@ -41,10 +43,10 @@ def load_url():
     return links
 
 
-def load_search():
+def load_search(cwd):
     print(bcolors.WARNING + 'Loading queries...' + bcolors.ENDC)
 
-    with open('search.txt', encoding="utf-8") as fh:
+    with open(cwd+'/search.txt', encoding="utf-8") as fh:
         search = [[y.strip() for y in x.strip().split('::::')]
                   for x in fh if x.strip() != '' and '::::' in x]
 
@@ -57,6 +59,7 @@ def load_search():
 
 
 def get_hash(path):
+    print("path ", path)
     with open(path, "rb") as f:
         current_hash = hashlib.md5(f.read()).hexdigest()
 

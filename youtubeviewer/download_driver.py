@@ -36,7 +36,8 @@ CHROME = ['{8A69D345-D564-463c-AFF1-A69D9E530F96}',
           '{4ea16ac7-fd5a-47c3-875b-dbf4a2008c20}']
 
 
-def download_driver(patched_drivers):
+def download_driver(patched_drivers,cwd):
+    
     osname = platform.system()
 
     print(bcolors.WARNING + 'Getting Chrome Driver...' + bcolors.ENDC)
@@ -108,14 +109,16 @@ def download_driver(patched_drivers):
     major_version = version.split('.')[0]
 
     uc.TARGET_VERSION = major_version
-
-    uc.install()
+    uc.user_data_dir = cwd
+    uc.install(
+            # executable_path = cwd+"/chromedriver"+exe_name
+    )
 
     return osname, exe_name
 
 
 def copy_drivers(cwd, patched_drivers, exe, total):
-    current = os.path.join(cwd, f'chromedriver{exe}')
+    current = os.path.join(os.path.expanduser("~"), f'chromedriver{exe}')
     os.makedirs(patched_drivers, exist_ok=True)
     for i in range(total+1):
         try:
