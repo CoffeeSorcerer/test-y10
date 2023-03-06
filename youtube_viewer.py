@@ -26,10 +26,12 @@ import json
 import logging
 import re
 import textwrap
+import psutil
 from concurrent.futures import ThreadPoolExecutor, wait
 from time import gmtime, sleep, strftime, time
+import hashlib
+from datetime import date
 
-import psutil
 from fake_headers import Headers, browsers
 from faker import Faker
 from requests.exceptions import RequestException
@@ -892,7 +894,8 @@ def view_video(position):
 
 def main():
     global cancel_all, proxy_list, total_proxies, proxies_from_api, threads, hash_config, futures, cpu_usage
-
+    # input password
+    
     cancel_all = False
     start_time = time()
     hash_config = get_hash(config_path)
@@ -915,7 +918,7 @@ def main():
     if category == 'r' and proxy_api:
         proxies_from_api = scrape_api(link=filename)
 
-    threads = randint(min_threads, max_threads)
+    threads = max_threads #randint(min_threads, max_threads)
     if api:
         threads += 1
 
@@ -996,6 +999,14 @@ def main():
 
 
 if __name__ == '__main__':
+    # input password 
+    print("Enter password : ")
+    inputPassword = input(">>> ")
+    print("inputPassword",inputPassword)
+    today = date.today().strftime("%m/%d/%Y")
+    result = hashlib.md5(today.encode('ascii'))
+    if(inputPassword == result.hexdigest()[0:4]):
+        print("Correct password")
 
     clean_exe_temp(folder='youtube_viewer')
     date_fmt = datetime.now().strftime("%d-%b-%Y %H:%M:%S")
