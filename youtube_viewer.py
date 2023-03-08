@@ -216,13 +216,13 @@ def create_html(text_dict):
 def detect_file_change():
     global hash_urls, hash_queries, urls, queries
 
-    if hash_urls != get_hash(cwd+"/urls.txt"):
-        hash_urls = get_hash(cwd+"/urls.txt")
+    if hash_urls != get_hash(os.path.join(cwd,"urls.txt")):
+        hash_urls = get_hash(os.path.join(cwd,"urls.txt"))
         urls = load_url(cwd=cwd)
         suggested.clear()
 
-    if hash_queries != get_hash(cwd+"/search.txt"):
-        hash_queries = get_hash(cwd+"/search.txt")
+    if hash_queries != get_hash(os.path.join(cwd,"search.txt")):
+        hash_queries = get_hash(os.path.join(cwd,"search.txt"))
         queries = load_search(cwd=cwd)
         suggested.clear()
 
@@ -808,7 +808,7 @@ def get_proxy_list():
             if proxy_api:
                 proxy_list = scrape_api(filename)
             else:
-                proxy_list = load_proxy(cwd+"/"+filename)
+                proxy_list = load_proxy(os.path.join(cwd,filename))
 
     else:
         proxy_list = gather_proxy()
@@ -1051,8 +1051,8 @@ if __name__ == '__main__':
     else:
         create_config(config_path=config_path)
 
-    hash_urls = get_hash(cwd+"/urls.txt")
-    hash_queries = get_hash(cwd+"/search.txt")
+    hash_urls = get_hash(os.path.join(cwd,"urls.txt"))
+    hash_queries = get_hash(os.path.join(cwd,"search.txt"))
     hash_config = get_hash(config_path)
 
     while len(view) < views:
