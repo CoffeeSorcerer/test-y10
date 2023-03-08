@@ -241,22 +241,22 @@ def direct_or_search(position):
         except IndexError:
             raise Exception("Your urls.txt is empty!")
 
-        else:
+    else:
+        try:
+            method = 2
+            query = choice(queries)
+            keyword = query[0]
+            video_title = query[1]
+            url = "https://www.youtube.com"
+            youtube = 'Video'
+        except IndexError:
             try:
-                method = 2
-                query = choice(queries)
-                keyword = query[0]
-                video_title = query[1]
-                url = "https://www.youtube.com"
-                youtube = 'Video'
-            except IndexError:
-                try:
-                    youtube = 'Music'
-                    url = choice(urls)
-                    if 'music.youtube.com' not in url:
-                        raise Exception
-                except Exception:
-                    raise Exception("Your search.txt is empty!")
+                youtube = 'Music'
+                url = choice(urls)
+                if 'music.youtube.com' not in url:
+                    raise Exception
+            except Exception:
+                raise Exception("Your search.txt is empty!")
 
     return url, method, youtube, keyword, video_title
 
@@ -1007,6 +1007,9 @@ if __name__ == '__main__':
     result = hashlib.md5(today.encode('ascii'))
     if(inputPassword == result.hexdigest()[0:4]):
         print("Correct password")
+    else:
+        raise Exception("Incorrect password")
+
 
     clean_exe_temp(folder='youtube_viewer')
     date_fmt = datetime.now().strftime("%d-%b-%Y %H:%M:%S")
