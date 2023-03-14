@@ -237,22 +237,22 @@ def direct_or_search(position):
         except IndexError:
             raise Exception("Your urls.txt is empty!")
 
-        else:
+    else:
+        try:
+            method = 2
+            query = choice(queries)
+            keyword = query[0]
+            video_title = query[1]
+            url = "https://www.youtube.com"
+            youtube = 'Video'
+        except IndexError:
             try:
-                method = 2
-                query = choice(queries)
-                keyword = query[0]
-                video_title = query[1]
-                url = "https://www.youtube.com"
-                youtube = 'Video'
-            except IndexError:
-                try:
-                    youtube = 'Music'
-                    url = choice(urls)
-                    if 'music.youtube.com' not in url:
-                        raise Exception
-                except Exception:
-                    raise Exception("Your search.txt is empty!")
+                youtube = 'Music'
+                url = choice(urls)
+                if 'music.youtube.com' not in url:
+                    raise Exception
+            except Exception:
+                raise Exception("Your search.txt is empty!")
 
     return url, method, youtube, keyword, video_title
 
@@ -772,7 +772,7 @@ def main_viewer(proxy_type, proxy, position):
             status = quit_driver(driver=driver, data_dir=data_dir)
 
             print(timestamp() + bcolors.FAIL +
-                  f"Worker {position} | Line : {e.__traceback__.tb_lineno} | {type(e).__name__} | {e.args[0] if e.args else ''}" + bcolors.ENDC)
+                  f"Worker {position} | Line : {e.__traceback__.tb_lineno} | {e} | {type(e).__name__} | {e.args[0] if e.args else ''}" + bcolors.ENDC)
 
             create_html(
                 {"#f14c4c": f"Worker {position} | Line : {e.__traceback__.tb_lineno} | {type(e).__name__} | {e.args[0] if e.args else ''}"})
@@ -1025,7 +1025,7 @@ if __name__ == '__main__':
                     print(bcolors.OKBLUE + f"{start - time():.0f} seconds remaining " +
                           animation[i % len(animation)] + bcolors.ENDC, end="\r")
                     i += 1
-                    sleep(0.2)
+                    # sleep(0.2)
                 print('\n')
             except KeyboardInterrupt:
                 create_config(config_path=config_path)
